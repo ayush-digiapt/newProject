@@ -162,7 +162,7 @@ exports.getUsersForEdit = function (req, res) {
     
     dbConnection = db.getDbConnection();
     
-    var queryStatement = "select first_name, last_name, email, password, mobile, address from users where email='"+req.body.email+"' and is_archived=0";
+    var queryStatement = "select first_name, last_name, email, mobile, address from users where email='"+req.body.email+"' and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -202,7 +202,7 @@ exports.editUsers = function(req, res) {
     console.log("request body: ", req.body);
 
     dbConnection = db.getDbConnection();
-    var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', password='"+req.body.password+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
+    var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 

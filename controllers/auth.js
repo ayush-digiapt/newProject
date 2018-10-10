@@ -23,7 +23,7 @@ exports.login = function(req,res) {
                 console.log("hii login successfull");
             } else {
                 res.status(204).send("No user found");
-                console.log("loginnot successfull");
+                console.log("ohhh login not successfull");
             }
 			
 		}
