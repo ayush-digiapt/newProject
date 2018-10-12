@@ -1,6 +1,9 @@
 var express = require('express');
 var db = require('../db/db');
 var router = express.Router();
+var url = require('url');
+// var url_parts = url.parse(request.url, true);
+// var query = url_parts.query;
 
 // create users
 exports.createUsers = function(req, res) {
@@ -11,6 +14,21 @@ exports.createUsers = function(req, res) {
     console.log("request body: ", req.body);
 
     dbConnection = db.getDbConnection();
+   
+    if(req.body.last_name===undefined )
+    {
+        req.body.last_name='';
+    }
+    if(req.body.address===undefined )
+    {
+        req.body.address='';
+    }
+    // if(req.body.mobile===undefined )
+    // {
+    //     req.body.mobile= null;
+
+   
+   
     var queryStatement = "insert into users values('"+req.body.first_name+"','"+req.body.last_name+"','"+req.body.email+"','"+req.body.password+"',"+req.body.mobile+",'"+req.body.address+"',0,now(),now())";
 
     console.log("query to be exectuted:: ",queryStatement);
@@ -18,11 +36,13 @@ exports.createUsers = function(req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-			res.status(500).send(err);		
+            res.status(500).send(err);	
+            	
         } 
         else {
             console.log("success: ",result);
             if(result.affectedRows === 1 ) {
+                
                 console.log("successfull createUsers");
                 res.status(201).send("user has been created successfully");		
             }
@@ -32,6 +52,8 @@ exports.createUsers = function(req, res) {
 }
 // get users
 exports.getUsers = function (req, res) {
+
+    console.log('req',req);
     console.log("entering into getUsers");
     // var users;
     // users = [{
@@ -44,8 +66,29 @@ exports.getUsers = function (req, res) {
     // }]
     
     dbConnection = db.getDbConnection();
+   
+        
+//    var adr = 'http://localhost:3000/default.htm?year=2017&email= "+req.query.email+"';
+
+ 
+//     var q = url.parse(adr, true);
+//     console.log(q.search); 
+//     var qdata = q.query;
+  
+//    console.log(qdata.email);
+
+
+// Task.findById(req.params.email, function(err, result) {
+//     if (err)
+//       res.send(err);
+//     res.json(result);
+//   });
+
+    //  var url_parts = url.parse(req.url, true);
+    //  var query = url_parts.query;
+     var email = req.params.email;
     
-    var queryStatement = "select first_name, last_name, email, mobile, address from users where email='"+req.body.email+"' and is_archived=0";
+    var queryStatement = "select first_name, last_name, email, mobile, address from users where email='"+email+"' and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -56,7 +99,7 @@ exports.getUsers = function (req, res) {
 		} else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(204).send("no user found");
+                res.status(401).send("no user found");
             } else {
                 res.status(200).send(result);
             }
@@ -100,14 +143,14 @@ exports.getAllUsers = function (req, res) {
         else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(204).send("no user found");
+                res.status(401).send("no user found");
             } else {
                 res.status(200).send(result);
             }
         }
         // else{
         //     console.log("no user found");
-        //     res.status(204).send('no user found');
+        //     res.status(401).send('no user found');
         // }
         console.log("exiting from getAllUsers");
     });
@@ -139,7 +182,7 @@ exports.deleteUsers = function(req, res) {
             }
              else{
                console.log("users is not exist");
-                res.status(204).send("users is not found");		
+                res.status(401).send("users is not found");		
                 
          }
         }
@@ -179,14 +222,14 @@ exports.getUsersForEdit = function (req, res) {
         else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(204).send("no user found");
+                res.status(401).send("no user found");
             } else {
                 res.status(200).send(result);
             }
         }
         // else{
         //     console.log("no user found");
-        //     res.status(204).send('no user found');
+        //     res.status(401).send('no user found');
         // }
         console.log("exiting from getUsersForEdit");
     });
@@ -202,7 +245,8 @@ exports.editUsers = function(req, res) {
     console.log("request body: ", req.body);
 
     dbConnection = db.getDbConnection();
-    var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
+   var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
+  // var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where first_name='"+req.body.first_name+"' and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -216,11 +260,11 @@ exports.editUsers = function(req, res) {
             console.log("in else condition");
             if(result.affectedRows === 1 ) {
                 console.log("successfull editedUsers");
-                res.status(200).send("users has been edited successfully",result);	
+                res.status(200).send("users has been edited successfully");	
             }
              else{
                console.log("email is wrong");
-                res.status(204).send("Users is not found");		
+                res.status(401).send("Users is not found");		
                 
          }
         }

@@ -11,20 +11,20 @@ router.get('/', function(req, res, next) {
 router.post('/createUsers', usersController.createUsers);
 
 /* POST get user. */
-router.post('/getUsers', usersController.getUsers);
+router.get('/getUsers/:email', usersController.getUsers);
 
 
 /* GET  get_all user. */
 router.get('/getAllUsers', usersController.getAllUsers);
 
 
-/* DELETE delete users. */
-router.delete('/deleteUsers', usersController.deleteUsers);
+/* POST delete users. */
+router.post('/deleteUsers', usersController.deleteUsers);
 
 /* POST get user. */
 router.post('/getUsersForEdit', usersController.getUsersForEdit);
 
 /* PUT edit user. */
-router.put('/editUsers', usersController.editUsers);
+router.post('/editUsers', usersController.editUsers);
 
 module.exports = router;
