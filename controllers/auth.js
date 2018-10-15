@@ -29,7 +29,7 @@ exports.login = function(req,res) {
                     } else {
                        // console.log("success: ",result);
                         if(result.length>0){
-                            res.status(200).send(" successfully login result");
+                            res.status(200).send(" successfully login ");
                             console.log("hii login successfull");
                         } else {
                             res.status(401).send("password is wrong");
