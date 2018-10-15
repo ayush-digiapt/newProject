@@ -5,8 +5,16 @@ var url = require('url');
 // var url_parts = url.parse(request.url, true);
 // var query = url_parts.query;
 
+function validateEmail(email) {
+    // First check if any value was actually set
+    if (email.length == 0) return false;
+    // Now validate the email format using Regex
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
+    return re.test(email);
+}
+
 // create users
-exports.createUsers = function(req, res) {
+exports.createUser = function(req, res) {
     
     console.log("entering into createUsers");
     
@@ -23,12 +31,25 @@ exports.createUsers = function(req, res) {
     {
         req.body.address='';
     }
-    // if(req.body.mobile===undefined )
-    // {
-    //     req.body.mobile= null;
+    if(req.body.mobile===undefined )
+    {
+        req.body.mobile= null;
+    }
 
+//    if(req.body.email!=null)
+//    {
+//         var email=req.body.email;
+        
+//    }
+    
+  
    
-   
+var email = req.body.email;
+if (!validateEmail(email)) { console.log('Invalid email address');
+res.status(204).send("invalid email address");
+}
+
+else{
     var queryStatement = "insert into users values('"+req.body.first_name+"','"+req.body.last_name+"','"+req.body.email+"','"+req.body.password+"',"+req.body.mobile+",'"+req.body.address+"',0,now(),now())";
 
     console.log("query to be exectuted:: ",queryStatement);
@@ -36,7 +57,7 @@ exports.createUsers = function(req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-            res.status(500).send(err);	
+            res.status(400).send(err);	
             	
         } 
         else {
@@ -50,8 +71,9 @@ exports.createUsers = function(req, res) {
         console.log("exiting from createUsers");
     });
 }
+}
 // get users
-exports.getUsers = function (req, res) {
+exports.getOneUser = function (req, res) {
 
     console.log('req',req);
     console.log("entering into getUsers");
@@ -95,11 +117,11 @@ exports.getUsers = function (req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-			res.status(500).send(err);		
+			res.status(400).send(err);		
 		} else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(401).send("no user found");
+                res.status(204).send("no user found");
             } else {
                 res.status(200).send(result);
             }
@@ -127,14 +149,14 @@ exports.getAllUsers = function (req, res) {
     
     dbConnection = db.getDbConnection();
     
-    var queryStatement = "select first_name, last_name, email, mobile from users where is_archived=0";
+    var queryStatement = "select first_name, last_name,email, mobile from users where is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-            res.status(500).send(err);	
+            res.status(400).send(err);	
         }	
 		//  else  {
         //     console.log("success: ",result);
@@ -143,7 +165,7 @@ exports.getAllUsers = function (req, res) {
         else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(401).send("no user found");
+                res.status(204).send("no user found");
             } else {
                 res.status(200).send(result);
             }
@@ -157,7 +179,7 @@ exports.getAllUsers = function (req, res) {
 }
 
 // delete users
-exports.deleteUsers = function(req, res) {
+exports.deleteUser = function(req, res) {
     
     console.log("entering into deleteUsers");
     
@@ -171,7 +193,7 @@ exports.deleteUsers = function(req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-			res.status(500).send(err);		
+			res.status(400).send(err);		
         } 
         else 
         {
@@ -182,7 +204,7 @@ exports.deleteUsers = function(req, res) {
             }
              else{
                console.log("users is not exist");
-                res.status(401).send("users is not found");		
+                res.status(204).send("users is not found");		
                 
          }
         }
@@ -191,7 +213,7 @@ exports.deleteUsers = function(req, res) {
 }
 
 // get users for edit
-exports.getUsersForEdit = function (req, res) {
+exports.getOneUserForEdit = function (req, res) {
     console.log("entering into getUsersForEdit");
     // var users;
     // users = [{
@@ -212,7 +234,7 @@ exports.getUsersForEdit = function (req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-            res.status(500).send(err);	
+            res.status(400).send(err);	
         }	
 		//  else {
         //     console.log("success: ",result);
@@ -222,7 +244,7 @@ exports.getUsersForEdit = function (req, res) {
         else{
             console.log("success: ",result);
             if(result.length === 0){
-                res.status(401).send("no user found");
+                res.status(204).send("no user found");
             } else {
                 res.status(200).send(result);
             }
@@ -237,12 +259,25 @@ exports.getUsersForEdit = function (req, res) {
 
 
 // edit users
-exports.editUsers = function(req, res) {
+exports.editUser = function(req, res) {
     
     console.log("entering into editUsers");
     
     // print inputs
     console.log("request body: ", req.body);
+
+    if(req.body.last_name===undefined )
+    {
+        req.body.last_name='';
+    }
+    if(req.body.address===undefined )
+    {
+        req.body.address='';
+    }
+    if(req.body.mobile===undefined )
+    {
+        req.body.mobile= null;
+    }
 
     dbConnection = db.getDbConnection();
    var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
@@ -253,7 +288,7 @@ exports.editUsers = function(req, res) {
     dbConnection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-			res.status(500).send(err);		
+			res.status(400).send(err);		
         } 
         else 
         {
@@ -264,7 +299,7 @@ exports.editUsers = function(req, res) {
             }
              else{
                console.log("email is wrong");
-                res.status(401).send("Users is not found");		
+                res.status(204).send("Users is not found");		
                 
          }
         }

@@ -13,7 +13,7 @@ exports.login = function(req,res) {
 	connection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
-            res.status(500).send(err);
+            res.status(400).send(err);
            
             		
 		} else {

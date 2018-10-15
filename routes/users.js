@@ -8,10 +8,10 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST create user. */
-router.post('/createUsers', usersController.createUsers);
+router.post('/createUser', usersController.createUser);
 
 /* POST get user. */
-router.get('/getUsers/:email', usersController.getUsers);
+router.get('/getOneUser/:email', usersController.getOneUser);
 
 
 /* GET  get_all user. */
@@ -19,12 +19,12 @@ router.get('/getAllUsers', usersController.getAllUsers);
 
 
 /* POST delete users. */
-router.post('/deleteUsers', usersController.deleteUsers);
+router.post('/deleteUser', usersController.deleteUser);
 
 /* POST get user. */
-router.post('/getUsersForEdit', usersController.getUsersForEdit);
+router.post('/getOneUserForEdit', usersController.getOneUserForEdit);
 
 /* PUT edit user. */
-router.post('/editUsers', usersController.editUsers);
+router.post('/editUser', usersController.editUser);
 
 module.exports = router;
