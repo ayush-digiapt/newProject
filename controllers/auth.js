@@ -9,7 +9,7 @@ exports.login = function(req,res) {
     console.log("in login");
     console.log("body: ",req.body);
     var connection = db.getDbConnection();
-    var queryStatement = "select email from admins where email='"+req.body.email+"' ";
+    var queryStatement = "select ID from admins where email='"+req.body.email+"' ";
 	connection.query(queryStatement,function(err,result){
 		if(err) {
 			console.log("error: ",err);
@@ -19,7 +19,7 @@ exports.login = function(req,res) {
 		} else {
            // console.log("success: ",result);
             if(result.length>0){
-                var queryStatement = "select * from admins where email='"+req.body.email+"' and password='"+req.body.password+"'";
+                var queryStatement = "select ID from admins where email='"+req.body.email+"' and password='"+req.body.password+"'";
                 connection.query(queryStatement,function(err,result){
                     if(err) {
                         console.log("error: ",err);

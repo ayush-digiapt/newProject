@@ -50,7 +50,7 @@ res.status(204).send("invalid email address");
 }
 
 else{
-    var queryStatement = "insert into users values('"+req.body.first_name+"','"+req.body.last_name+"','"+req.body.email+"','"+req.body.password+"',"+req.body.mobile+",'"+req.body.address+"',0,now(),now())";
+    var queryStatement = "insert into users(first_name, last_name, email, password, mobile, address, is_archived, created, updated) values('"+req.body.first_name+"','"+req.body.last_name+"','"+req.body.email+"','"+req.body.password+"',"+req.body.mobile+",'"+req.body.address+"',0,now(),now())";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -108,9 +108,9 @@ exports.getOneUser = function (req, res) {
 
     //  var url_parts = url.parse(req.url, true);
     //  var query = url_parts.query;
-     var email = req.params.email;
+     var ID = req.params.ID;
     
-    var queryStatement = "select first_name, last_name, email, mobile, address from users where email='"+email+"' and is_archived=0";
+    var queryStatement = "select first_name, last_name, email, mobile, address from users where ID="+ID+" and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -187,7 +187,8 @@ exports.deleteUser = function(req, res) {
     console.log("request body: ", req.body);
 
     dbConnection = db.getDbConnection();
-    var queryStatement = "update users set is_archived=1, updated = now() where email = '"+req.body.email+"' And is_archived=0";
+    var ID = req.params.ID;
+    var queryStatement = "update users set is_archived=1, updated = now() where ID="+ID+" And is_archived=0";
     console.log("query to be exectuted:: ",queryStatement);
 
     dbConnection.query(queryStatement,function(err,result){
@@ -227,7 +228,7 @@ exports.getOneUserForEdit = function (req, res) {
     
     dbConnection = db.getDbConnection();
     
-    var queryStatement = "select first_name, last_name, email, mobile, address from users where email='"+req.body.email+"' and is_archived=0";
+    var queryStatement = "select first_name, last_name, email, mobile, address from users where ID="+req.body.ID+" and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);
 
@@ -265,12 +266,18 @@ exports.editUser = function(req, res) {
     
     // print inputs
     console.log("request body: ", req.body);
+    var ID = req.params.ID;
+    
 
+    if(req.body.first_name===undefined )
+    {
+        req.body.first_name='';
+    }
     if(req.body.last_name===undefined )
     {
         req.body.last_name='';
     }
-    if(req.body.address===undefined )
+    if(req.body.address=== undefined )
     {
         req.body.address='';
     }
@@ -280,7 +287,9 @@ exports.editUser = function(req, res) {
     }
 
     dbConnection = db.getDbConnection();
-   var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where email='"+req.body.email+"' and is_archived=0";
+    var ID = req.params.ID;
+   
+   var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where ID="+ID+" and is_archived=0";
   // var queryStatement = "update users set first_name='"+req.body.first_name+"', last_name='"+req.body.last_name+"', mobile="+req.body.mobile+", address='"+req.body.address+"', updated= now() where first_name='"+req.body.first_name+"' and is_archived=0";
 
     console.log("query to be exectuted:: ",queryStatement);

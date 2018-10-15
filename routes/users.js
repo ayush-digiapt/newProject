@@ -11,7 +11,7 @@ var usersController = require("../controllers/users")
 router.post('/', usersController.createUser);
 
 /* POST get user. */
-router.get('/:email', usersController.getOneUser);
+router.get('/:ID', usersController.getOneUser);
 
 
 /* GET  get_all user. */
@@ -19,12 +19,12 @@ router.get('/', usersController.getAllUsers);
 
 
 /* POST delete users. */
-router.delete('/', usersController.deleteUser);
+router.delete('/:ID', usersController.deleteUser);
 
 /* POST get user. */
 //router.post('/getOneUserForEdit', usersController.getOneUserForEdit);
 
 /* PUT edit user. */
-router.put('/', usersController.editUser);
+router.put('/:ID', usersController.editUser);
 
 module.exports = router;
